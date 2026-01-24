@@ -1,0 +1,399 @@
+{
+  "name": "Menú Overview",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "1c904ff0-b6f8-4063-b2cb-97b463abcbfa",
+      "name": "Telegram Trigger",
+      "webhookId": "b9545048-0e69-4262-a3bf-ea600b19fb38",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog",
+          "mode": "list",
+          "cachedResultName": "Agenda_bot_sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        320
+      ],
+      "id": "7591ad7d-43a9-48e4-8d09-35b2a96678fa",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "hGSQSmHO3j7zYLyG",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        544
+      ],
+      "id": "83765216-5547-4c13-84ae-7afac5864832",
+      "name": "Send a text message1",
+      "webhookId": "396f6d5a-c6f0-4a6c-8836-904bb0e7984f",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "=Ups, esa opción no existe en este menú 😅\n\nPor favor escribe uno de los números que ves en pantalla.\n\nEstás en: {{pantalla_actual != null ? pantalla_actual:\"\"}}\nOpciones disponibles: {{rango_opciones != null ? rango_opciones:\"\"}}\n\n👉 Tip: escribe solo el número (por ejemplo: 1).",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        96
+      ],
+      "id": "62fc14da-2228-48e1-9338-d7ead7983d7b",
+      "name": "Opción No Valida",
+      "webhookId": "e85291c3-1b7e-48ad-8b3b-5569eb31d4c9",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "Hola, soy AgendaBot 👋\n\nEstoy aquí para ayudarte a organizar tus citas, tareas y recordatorios\nde forma sencilla y sin complicaciones.\n\nPuedes escribirme en cualquier momento.\nPara avanzar, solo tienes que escribir el número de la opción que quieras usar.\n\nMenú principal:\n0. Ayuda\n\n1. Agenda (citas)\n\n2. Tareas\n\n3. Recordatorios\n\n4. Hábitos\n\n5. Listas\n\n6. Reportes\n\n7. Configuración\n\n8. Administrador\n\nTip rápido:\nescribe solo el número (por ejemplo: 1) y presiona enviar.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        -288
+      ],
+      "id": "d60b9d1f-3baa-4f88-b170-13965323b666",
+      "name": "Bienvenida",
+      "webhookId": "e85291c3-1b7e-48ad-8b3b-5569eb31d4c9",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "¿En qué te puedo ayudar hoy? 😊\n\nMenú principal:\n0. Ayuda\n\n1. Agenda (citas)\n\n2. Tareas\n\n3. Recordatorios\n\n4. Hábitos\n\n5. Listas\n\n6. Reportes\n\n7. Configuración\n\n8. Administrador\n\n💡 Sugerencia:\nSi quieres empezar rápido, te recomiendo la opción 1 (Agenda).",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "445f1f5d-0c10-4d7a-b4b5-2e13966278cc",
+      "name": "Menu Principal",
+      "webhookId": "e85291c3-1b7e-48ad-8b3b-5569eb31d4c9",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "Claro, te ayudo 😊\n\nSoy AgendaBot y puedo ayudarte a:\n\n- Agendar y gestionar citas\n\n- Crear y organizar tareas\n\n- Llevar recordatorios\n\n- Registrar hábitos\n\n- Crear listas personalizadas\n\nPara usarme, solo escribe el número de la opción que quieras.\n\n¿Qué deseas hacer ahora?\n\n1. Ir al menú principal\n\n2. Salir\n\n💡 Sugerencia:\nTe recomiendo ir al menú principal (1) para empezar.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "da96b416-1ebc-40c1-8cb0-6c3e3478032d",
+      "name": "Menú Ayuda",
+      "webhookId": "e53a7f73-09d7-4b20-aa71-6cea408b1691",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "Perfecto, vamos con tu agenda 📅\n\n¿Qué deseas hacer?\n\n1. Agendar una nueva cita\n\n2. Consultar tu agenda\n\n3. Reprogramar una cita\n\n4. Cancelar una cita\n\n5. Marcar una cita como completada\n\n6. Volver al menú principal\n\n💡 Sugerencia:\nTe recomiendo la opción 1 (Agendar una nueva cita).",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -192
+      ],
+      "id": "34359413-37b1-445a-866f-605a678a93bf",
+      "name": "Menú Agenda",
+      "webhookId": "95c2e7db-d561-4644-9f1a-dfd17f305b61",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.result.chat.id }}",
+        "text": "Empecemos a crear tu cita 😊\n\nPaso 1 de 6 — Fecha\n\n¿Cuál es la fecha de la cita?\n\nFormato: YYYY-MM-DD\nEjemplo: 2025-12-20\n\n9. Cancelar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        -192
+      ],
+      "id": "92339d56-c97b-44f4-84d2-1bd9566a15fa",
+      "name": "Agendar Cita Paso 1",
+      "webhookId": "40f5c2e5-ba01-4e1d-8e67-331e88961fc0",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.result.chat.id }}",
+        "text": "Ups 😅 la fecha no tiene el formato correcto.\n\nRecuerda usar: YYYY-MM-DD\nEjemplo: 2025-12-20\n\n9. Cancelar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "0eef8b65-88ea-4683-83da-bfb517bb1b47",
+      "name": "Fecha Invalida",
+      "webhookId": "032cae0e-0c44-46ea-ab8d-e61649d9bca9",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.result.from.id }}",
+        "text": "Hmm 🤔 esa fecha ya pasó.\n\nPor favor ingresa una fecha futura.\n\nEjemplo: 2025-12-20\n\n9. Cancelar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        -192
+      ],
+      "id": "f776361e-c625-49cc-8594-46c15b051c27",
+      "name": "Fecha en el pasado",
+      "webhookId": "431e9db7-ea8c-443c-bb82-65fa90992bd9",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.result.from.id }}",
+        "text": "Perfecto 👍\n\nPaso 2 de 6 — Hora\n\n¿A qué hora será la cita?\n\nFormato 24 horas: HH:MM\nEjemplo: 14:30\n\n9. Cancelar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        -384
+      ],
+      "id": "fbac74f1-d83d-4b89-bce4-c50d20a58c3e",
+      "name": "Agendar Cita Paso 2",
+      "webhookId": "51955384-d352-46f0-a7db-4ba879bc682f",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.result.from.id }}",
+        "text": "Ups 😅 la hora no tiene un formato válido.\n\nRecuerda usar formato 24 horas:\nHH:MM\n\nEjemplo: 14:30\n\n9. Cancelar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        -384
+      ],
+      "id": "bc73a1e2-d020-470a-9f14-5f8756b662e9",
+      "name": "Send a text message",
+      "webhookId": "89a3d27f-d5de-425c-8c71-1bdf700a711e",
+      "credentials": {
+        "telegramApi": {
+          "id": "9O34GtDHCzgXdfGS",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Opción No Valida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Menu Principal",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bienvenida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menu Principal": {
+      "main": [
+        [
+          {
+            "node": "Menú Ayuda",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Menú Agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menú Agenda": {
+      "main": [
+        [
+          {
+            "node": "Agendar Cita Paso 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fecha Invalida": {
+      "main": [
+        []
+      ]
+    },
+    "Agendar Cita Paso 1": {
+      "main": [
+        [
+          {
+            "node": "Fecha Invalida",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fecha en el pasado",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agendar Cita Paso 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar Cita Paso 2": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "70096a12-f2f0-469a-a7af-604dc53c07ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b7b70b82f260dd84cef69378d5fb96b8373c4e2539cba617c61d23378f57a56"
+  },
+  "id": "4B5y8vCTBTSfwfd_yropU",
+  "tags": []
+}
