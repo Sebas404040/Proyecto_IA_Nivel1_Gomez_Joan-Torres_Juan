@@ -60,24 +60,33 @@ El bot funciona mediante un sistema de Gestión de Estados y Sesiones. Cada usua
 
 ![agendabot_logo](./Readme_images/states_images.png)
 
+## Flujo Agendamiento | Programar una cita
+
+1. El menú es presentado y el usuario elige una opción del menu (1).
 ![agendabot_logo](./Readme_images/paso_1.png)
 
+2. El bot envía un submenu sobre lo que el usuario desea hacer en la programaci;ón de su cita (1. Agendar una nueva cita).
 ![agendabot_logo](./Readme_images/paso_2.png)
 
-![agendabot_logo](./Readme_images/paso_2.png)
-
+3. El bot empieza preguntando primeramente la fecha de la cita en un formato correcto.
 ![agendabot_logo](./Readme_images/paso_3.png)
 
+4. El usuario ingresa la hora en un formato correcto.
 ![agendabot_logo](./Readme_images/paso_4.png)
 
+5. El bot ahora enviara un mensaje solicitando el nombre para asignarlo a la cita.
 ![agendabot_logo](./Readme_images/paso_5.png)
 
+6. El bot ahora envía un mensaje solicitando el motivo de la cita.
 ![agendabot_logo](./Readme_images/paso_6.png)
 
+7. Finalmente el bot solicita por elección como será la atención.
 ![agendabot_logo](./Readme_images/paso_7.png)
 
+8. El bot enviará un mensaje sobre como se van a guardar los datos del usuario. 
 ![agendabot_logo](./Readme_images/paso_8.png)
 
+9. El bot envía un mensaje de confirmación con el ID de la cita. 
 ![agendabot_logo](./Readme_images/paso_9.png)
 
 ## 🤝 Trabajo colaborativo
