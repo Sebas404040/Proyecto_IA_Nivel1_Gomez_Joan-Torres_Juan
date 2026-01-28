@@ -91,12 +91,12 @@ Aquí encontrarás la documentación completa, el progreso del equipo y todas la
 <table>
 <tr>
 <td align="center" width="50%">
-<img src="image-1.png" alt="Joan" width="150" style="border-radius: 50%; border: 3px solid #007bff;"/>
+<img src="./Readme_images/image-1.png" alt="Joan" width="150" style="border-radius: 50%; border: 3px solid #007bff;"/>
 
 **Joan Sebastian Gómez Serrano**
 </td>
 <td align="center" width="50%">
-<img src="image.png" alt="Juan" width="150" style="border-radius: 50%; border: 3px solid #28a745;"/>
+<img src="./Readme_images/image.png" alt="Juan" width="150" style="border-radius: 50%; border: 3px solid #28a745;"/>
 
 **Juan Jose Torres Becerra**
 </td>
