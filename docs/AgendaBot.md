@@ -129,31 +129,69 @@ Base de datos transaccional de las reservas para las citas.
 | `estado` | Estado actual: `Pendiente`, `Cancelada`, `Finalizada`. |
 | `recordatorio_enviado`| Flag (`TRUE`/`FALSE`) para evitar duplicidad en alertas. |
 
-### B. Hoja `TAREAS` (Registro de tareas)
+### C. Hoja `TAREAS` (Registro de tareas)
 Base de datos para almacenar las tareas que se creen por el usuario.
 
 | Columna | Descripción |
 | :--- | :--- |
-| `id_cita` | Identificador único de la reserva. |
-| `telegram_user` | ID del usuario propietario de la cita (Foreign Key). |
-| `creado_por` | Nombre legible del usuario. |
-| `fecha` | Fecha de la cita (Formato `YYYY-MM-DD`). |
-| `hora` | Hora de la cita (Formato `HH:mm`). |
-| `estado` | Estado actual: `Pendiente`, `Cancelada`, `Finalizada`. |
-| `recordatorio_enviado`| Flag (`TRUE`/`FALSE`) para evitar duplicidad en alertas. |
+| `id_tarea` | Identificador único de la tarea (Primary Key). |
+| `titulo` | Título de la tarea. |
+| `prioridad` | Prioridad de la tarea (`Alta`, `Media`, `Baja`). |
+| `estado` | Estado de la tarea actualmente |
+| `fecha_oBjetivo` | Fecha limite de la tarea (Formato `YYYY-MM-DD`). |
+| `creado_por` | ID del usuario que creó la tarea. |
 
-### B. Hoja `CITAS` (Registro de Eventos)
-Base de datos transaccional de las reservas para las citas.
+### D. Hoja `HABITOS` (Registro de Habitos)
+Base de datos para el almacenamiento de los habitos a cumplir.
 
 | Columna | Descripción |
 | :--- | :--- |
-| `id_cita` | Identificador único de la reserva. |
-| `telegram_user` | ID del usuario propietario de la cita (Foreign Key). |
-| `creado_por` | Nombre legible del usuario. |
-| `fecha` | Fecha de la cita (Formato `YYYY-MM-DD`). |
-| `hora` | Hora de la cita (Formato `HH:mm`). |
-| `estado` | Estado actual: `Pendiente`, `Cancelada`, `Finalizada`. |
-| `recordatorio_enviado`| Flag (`TRUE`/`FALSE`) para evitar duplicidad en alertas. |
+| `id_habito` | Identificador único del habito (Primary Key). |
+| `nombre` | Nombre asignado al hábito. |
+| `frecuencia` | Frecuencia a la que se debe cumplir el habito. |
+| `hora_recordatorio` | Hora a la que debe recordar realizar el habito. |
+| `creado_por` | ID de la persona que creó el hábito. |
+
+
+### E. Hoja `LISTAS` (Registro de Listas)
+Base de datos de las listas que se creen por el usuario.
+
+| Columna | Descripción |
+| :--- | :--- |
+| `id_lista` | Identificador único de la lista (Primary Key). |
+| `nombre_lista` | Nombre asignado a la lista. |
+| `creado_por` | ID de la persona que creó la lista. |
+
+
+### F. Hoja `ITEMS_LISTA` (Registro de Items)
+Similar a la anterior pero más especifica ya que almacena los items de cada lista especificamente.
+
+| Columna | Descripción |
+| :--- | :--- |
+| `id_item` | Identificador único del item (Primary Key). |
+| `id_lista` | Identificador perteneciente a la lista en la que contiene el item (Foreign Key). |
+| `item` | Nombre del item |
+
+### G. Hoja `USUARIOS` (Registro de Usuarios)
+Hoja en la que se almacenan los usuarios que envian algún mensaje al bot.
+
+| Columna | Descripción |
+| :--- | :--- |
+| `telegram_user` | ID del usuario (Primary Key). |
+| `nombre` | Nombre que figura en Telegram |
+| `rol` | Rol actualmente |
+| `permitido` | Si esta habilitado para enviar mensajes. |
+
+### H. Hoja `LOGS` (Registro de Logs)
+Hoja donde se almacenan los logs presentes en el bot.
+
+| Columna | Descripción |
+| :--- | :--- |
+| `timestamp` | Marca de fecha. |
+| `telegram_user` | ID del usuario (Foreign Key) |
+| `pantalla` | Pantalla en la que se encuentra actualmente. |
+| `opción elegida` | La opción que el usuario eligió dentro del bot.|
+| `resultado` | Pequeño resumen en donde se encuentra el usuario. |
 
 ---
 
@@ -217,4 +255,3 @@ El sistema consta de dos workflows independientes en n8n:
 * [ ] Panel de administración web para el dueño del negocio.
 
 ---
-*Documentación generada automáticamente para el proyecto de Sistema de Citas.*
