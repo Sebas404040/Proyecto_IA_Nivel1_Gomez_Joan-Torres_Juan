@@ -79,3 +79,30 @@ El bot funciona mediante un sistema de Gestión de Estados y Sesiones. Cada usua
 ![agendabot_logo](./Readme_images/paso_8.png)
 
 ![agendabot_logo](./Readme_images/paso_9.png)
+
+## 🤝 Trabajo colaborativo
+
+✨ **[Explora nuestro Workspace Colaborativo en Notion →](https://www.notion.so/2f1ed2d4d86980f3b467ddadb7f4a642?v=2f1ed2d4d8698021b987000cffae0e62&source=copy_link)**
+
+Aquí encontrarás la documentación completa, el progreso del equipo y todas las decisiones de diseño del proyecto.
+
+## 👥 Autores Principales
+
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="image-1.png" alt="Joan" width="150" style="border-radius: 50%; border: 3px solid #007bff;"/>
+
+**Joan Sebastian Gómez Serrano**
+</td>
+<td align="center" width="50%">
+<img src="image.png" alt="Juan" width="150" style="border-radius: 50%; border: 3px solid #28a745;"/>
+
+**Juan Jose Torres Becerra**
+</td>
+</tr>
+</table>
+
+---
+
+Desarrollo del **AgendaBot** | Proyecto IA Nivel 1
