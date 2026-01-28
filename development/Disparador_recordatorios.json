@@ -1,0 +1,386 @@
+{
+  "name": "Disparador_recordatorios",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f3566c6b-62ba-4cc6-8706-52b468ff464b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog",
+          "mode": "list",
+          "cachedResultName": "Agenda_bot_sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "CITAS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "estado",
+              "lookupValue": "Pendiente"
+            },
+            {
+              "lookupColumn": "recordatorio_enviado",
+              "lookupValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e87e9698-b3e3-4334-83f5-8af021572774",
+      "name": "Obtener_estado_recordatorio",
+      "credentials": {
+        "googleApi": {
+          "id": "VJaPpLM5hhLBGBjj",
+          "name": "Google Service Account account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog",
+          "mode": "list",
+          "cachedResultName": "Agenda_bot_sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1301766078,
+          "mode": "list",
+          "cachedResultName": "SESSIONS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit#gid=1301766078"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        0
+      ],
+      "id": "eb1fd017-83ee-4a6f-a3dc-908c4ba22e3b",
+      "name": "Leer sesiones",
+      "credentials": {
+        "googleApi": {
+          "id": "VJaPpLM5hhLBGBjj",
+          "name": "Google Service Account account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const ZONA_HORARIA = 'America/Bogota';\nconst DEFAULT_AVISO = 60; \n\nlet citas = [];\nlet sesiones = [];\n\ntry {\n    citas = $items(\"Obtener_estado_recordatorio\");\n    sesiones = $items(\"Leer sesiones\");\n} catch(e) {\n    return []; // Si falla la lectura, no enviamos nada\n}\n\nconst aEnviar = []; // Aquí guardaremos SOLO los mensajes listos\nconst ahora = DateTime.now().setZone(ZONA_HORARIA);\n\n// RECORRER CITAS\nfor (const itemCita of citas) {\n    const cita = itemCita.json;\n    \n    // 1. BUSCAR USUARIO POR ID\n    const usuario = sesiones.find(u => u.json.telegram_user == cita.telegram_user);\n\n    // Si no hay usuario o tiene alertas apagadas, saltamos al siguiente\n    if (!usuario || usuario.json.alertas_activas === \"FALSE\") continue;\n\n    // 2. ARREGLAR LA HORA (El truco del cero)\n    let horaTexto = cita.hora ? cita.hora.toString().trim() : \"00:00\";\n    if (horaTexto.indexOf(':') === 1) {\n        horaTexto = \"0\" + horaTexto;\n    }\n    const horaLimpia = horaTexto.substring(0,5); \n\n    const fechaFinalIso = `${cita.fecha}T${horaLimpia}:00`;\n    const fechaCita = DateTime.fromISO(fechaFinalIso, { zone: ZONA_HORARIA });\n\n    // Si la fecha es inválida, saltamos\n    if (!fechaCita.isValid) continue;\n\n    // 3. MATEMÁTICAS\n    const diferenciaMinutos = fechaCita.diff(ahora, 'minutes').minutes;\n    const antelacion = parseInt(usuario.json.preferencia_aviso) || DEFAULT_AVISO;\n\n    // 4. CONDICIÓN FINAL (Solo pasa lo que cumple)\n    // Usamos Math.floor para evitar decimales molestos\n    if (diferenciaMinutos <= antelacion && diferenciaMinutos > 0) {\n        \n        aEnviar.push({\n            json: {\n                chat_id: usuario.json.telegram_user, \n                mensaje: `🔔 *Recordatorio de Cita*\\n\\nHola ${cita.creado_por || \"Usuario\"}, recuerda que tienes una cita programada.\\n\\n📅 Fecha: ${cita.fecha}\\n⏰ Hora: ${cita.hora}\\n\\n¡Te esperamos!`,\n                id_fila_cita: itemCita.rowNumber || itemCita.json.row_number || itemCita.index + 2\n            }\n        });\n    }\n}\n\nreturn aEnviar;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "1d74b098-7cf6-4c9d-8768-cfc26bce41f0",
+      "name": "Procesar_recordatorios",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Procesar_recordatorios').item.json.chat_id }}",
+        "text": "={{ $('Procesar_recordatorios').item.json.mensaje }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        16
+      ],
+      "id": "bda7c38e-e26f-49e1-a93c-0aae22e38734",
+      "name": "Enviar_recordatorio",
+      "webhookId": "9ecf15af-c4b9-437e-8d12-ea062c84fa24",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "ZwELOJsts6YCD2Un",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog",
+          "mode": "list",
+          "cachedResultName": "Agenda_bot_sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "CITAS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lbVT2-3mihfAwOVcJHO2MWlbExKG3T3PULHCbHlEFog/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "recordatorio_enviado": "=TRUE",
+            "row_number": "={{ $json.id_fila_cita }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "id_cita",
+              "displayName": "id_cita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "motivo",
+              "displayName": "motivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "creado_por",
+              "displayName": "creado_por",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "timestamp_creacion",
+              "displayName": "timestamp_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "recordatorio_enviado",
+              "displayName": "recordatorio_enviado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        16
+      ],
+      "id": "1a306d09-de81-49ae-b009-5df740d5b2a6",
+      "name": "Actualizar_estado_recordatorio",
+      "credentials": {
+        "googleApi": {
+          "id": "VJaPpLM5hhLBGBjj",
+          "name": "Google Service Account account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener_estado_recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener_estado_recordatorio": {
+      "main": [
+        [
+          {
+            "node": "Leer sesiones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer sesiones": {
+      "main": [
+        [
+          {
+            "node": "Procesar_recordatorios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar_recordatorios": {
+      "main": [
+        [
+          {
+            "node": "Actualizar_estado_recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar_recordatorio": {
+      "main": [
+        []
+      ]
+    },
+    "Actualizar_estado_recordatorio": {
+      "main": [
+        [
+          {
+            "node": "Enviar_recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "e98e17c0-1d7c-46aa-bc3a-967868b32e49",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "56786992bfd0a0623dc9deb33cd7de7108a81be9d60180553dee3cf7cf3476d3"
+  },
+  "id": "hPRwnjF2-sa82ov0smtqW",
+  "tags": []
+}
