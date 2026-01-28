@@ -54,3 +54,28 @@ Próxima Acción: Identifica y muestra cuál es la cita inminente más cercana.
 
 Historial: Muestra un log cronológico de las últimas interacciones, permitiendo al usuario llevar un control de su actividad.
 
+## 💠 Funcionamiento por estados
+
+El bot funciona mediante un sistema de Gestión de Estados y Sesiones. Cada usuario interactúa dentro de un flujo controlado, avanzando por diferentes etapas lógicas para completar sus tareas. Esto nos permite mantener el contexto de la conversación, validar la información en tiempo real y ofrecer una experiencia de usuario fluida y coherente.
+
+![agendabot_logo](./Readme_images/states_images.png)
+
+![agendabot_logo](./Readme_images/paso_1.png)
+
+![agendabot_logo](./Readme_images/paso_2.png)
+
+![agendabot_logo](./Readme_images/paso_2.png)
+
+![agendabot_logo](./Readme_images/paso_3.png)
+
+![agendabot_logo](./Readme_images/paso_4.png)
+
+![agendabot_logo](./Readme_images/paso_5.png)
+
+![agendabot_logo](./Readme_images/paso_6.png)
+
+![agendabot_logo](./Readme_images/paso_7.png)
+
+![agendabot_logo](./Readme_images/paso_8.png)
+
+![agendabot_logo](./Readme_images/paso_9.png)
